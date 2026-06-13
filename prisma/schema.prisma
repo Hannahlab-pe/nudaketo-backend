@@ -16,6 +16,40 @@ model User {
   orders    Order[]
 }
 
+model Product {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  category    String
+  tagline     String
+  image       String
+  imageDetail String
+  shortDesc   String
+  description String
+  highlights  String[]
+  badge       String?
+  accentClass String
+  btnClass    String
+  cardBg      String
+  protein     String
+  netWeight   String
+  packaging   String
+  active      Boolean       @default(true)
+  sizes       ProductSize[]
+  createdAt   DateTime      @default(now())
+}
+
+model ProductSize {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  sizeKey   String
+  label     String
+  size      String
+  pieces    String
+  price     Float
+}
+
 model Order {
   id          String      @id @default(cuid())
   user        User        @relation(fields: [userId], references: [id])
@@ -29,8 +63,8 @@ model Order {
 }
 
 model OrderItem {
-  id        String @id @default(cuid())
-  order     Order  @relation(fields: [orderId], references: [id])
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id])
   orderId   String
   productId Int
   sizeId    String

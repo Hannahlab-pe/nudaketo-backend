@@ -1,0 +1,136 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const products = [
+    {
+      slug: 'galleton-chips-almendras',
+      name: 'Galletón Chips & Almendras',
+      category: 'galletones',
+      tagline: 'Crujiente · Keto · Premium',
+      image: '/images/chips-almendras-lifestyle.jpg',
+      imageDetail: '/images/chips-almendras-pack.jpg',
+      shortDesc: 'Harina de almendra, chips de chocolate sin azúcar y almendras laminadas tostadas.',
+      description: 'Galletón keto premium elaborado con harina de almendra, chips de chocolate sin azúcar y almendras laminadas tostadas. Textura crocante, sabor equilibrado y proteína real en cada mordida.',
+      highlights: ['Vainilla real y textura chewy', 'Chips de chocolate sin azúcar', 'Almendras laminadas tostadas', 'Endulzado con eritritol y extracto de monk fruit', 'Sin azúcar añadida', 'Gluten free', '6 g de proteína por galletón', 'Ideal como snack saludable o acompañamiento de café'],
+      badge: 'MÁS VENDIDO',
+      accentClass: 'text-nk-gold',
+      btnClass: 'bg-nk-choco hover:bg-nk-gold text-nk-ivory',
+      cardBg: 'bg-white',
+      protein: '6g',
+      netWeight: '45g / 135g',
+      packaging: 'Bolsa doypack resellable',
+      sizes: [
+        { sizeKey: 'ind', label: 'Individual', size: '45g', pieces: '1 galletón', price: 8.5 },
+        { sizeKey: 'pack', label: 'Pack x3', size: '135g', pieces: '3 galletones', price: 25.0 },
+      ],
+    },
+    {
+      slug: 'galleton-doble-cacao',
+      name: 'Galletón Doble Cacao',
+      category: 'galletones',
+      tagline: 'Intenso · Chocolate · Keto',
+      image: '/images/doble-cacao-lifestyle.jpg',
+      imageDetail: '/images/doble-cacao-hero.jpg',
+      shortDesc: 'Chocolate intenso con textura chewy. Harina de almendra y doble cacao puro sin azúcar.',
+      description: 'Galletón keto premium de chocolate intenso, elaborado con harina de almendra y doble cacao puro. Textura chewy perfecta, con chips de chocolate sin azúcar en cada galletón.',
+      highlights: ['Chocolate intenso y textura chewy', 'Doble cacao puro sin azúcar', 'Harina de almendra como base', 'Endulzado con eritritol y extracto de monk fruit', 'Sin azúcar añadida', 'Gluten free', '6 g de proteína por galletón', 'Ideal para los amantes del chocolate'],
+      badge: 'NUEVO',
+      accentClass: 'text-nk-choco',
+      btnClass: 'bg-nk-choco hover:bg-nk-gold text-nk-ivory',
+      cardBg: 'bg-nk-ivory2',
+      protein: '6g',
+      netWeight: '45g / 135g',
+      packaging: 'Bolsa doypack resellable',
+      sizes: [
+        { sizeKey: 'ind', label: 'Individual', size: '45g', pieces: '1 galletón', price: 8.5 },
+        { sizeKey: 'pack', label: 'Pack x3', size: '135g', pieces: '3 galletones', price: 25.0 },
+      ],
+    },
+    {
+      slug: 'galleton-vainilla-chips',
+      name: 'Galletón Vainilla Chips',
+      category: 'galletones',
+      tagline: 'Suave · Aromático · Keto',
+      image: '/images/vainilla-chips-pack.jpg',
+      imageDetail: '/images/vainilla-chips-pack.jpg',
+      shortDesc: 'Harina de almendra con vainilla real y chips de chocolate sin azúcar.',
+      description: 'Galletón keto premium elaborado con harina de almendra y vainilla real, combinado con chips de chocolate sin azúcar para lograr un equilibrio perfecto entre suavidad, dulzor y textura.',
+      highlights: ['Vainilla real y textura chewy', 'Chips de chocolate sin azúcar', 'Endulzado con eritritol y extracto de monk fruit', 'Sin azúcar añadida', 'Gluten free', '5 g de proteína por galletón', 'Elaborado con ingredientes seleccionados', 'Ideal para snack, lonchera saludable o acompañamiento de café'],
+      badge: null,
+      accentClass: 'text-nk-olive',
+      btnClass: 'bg-nk-olive hover:bg-nk-choco text-nk-ivory',
+      cardBg: 'bg-white',
+      protein: '5g',
+      netWeight: '45g / 135g',
+      packaging: 'Bolsa doypack resellable',
+      sizes: [
+        { sizeKey: 'ind', label: 'Individual', size: '45g', pieces: '1 galletón', price: 8.5 },
+        { sizeKey: 'pack', label: 'Pack x3', size: '135g', pieces: '3 galletones', price: 25.0 },
+      ],
+    },
+    {
+      slug: 'barra-cacao-nuts',
+      name: 'Barra Cacao Nuts',
+      category: 'barras',
+      tagline: 'Energizante · Intenso · Keto',
+      image: '/images/barra-cacao-pack.jpg',
+      imageDetail: '/images/barra-cacao-hero.jpg',
+      shortDesc: 'Barra energética de cacao puro con avellanas seleccionadas. Keto friendly.',
+      description: 'Barra energética keto con cacao puro y avellanas seleccionadas. Endulzada con eritritol y extracto de monk fruit. La opción perfecta para una fuente de energía real sin comprometer tu estilo de vida keto.',
+      highlights: ['Cacao puro de calidad', 'Avellanas seleccionadas', 'Sin azúcar añadida', 'Gluten free', 'Endulzado con eritritol y monk fruit', '6 g de proteína por barra', 'Keto friendly', 'Ideal entre comidas o antes de entrenar'],
+      badge: null,
+      accentClass: 'text-nk-gold',
+      btnClass: 'bg-nk-gold hover:bg-nk-choco text-nk-ivory',
+      cardBg: 'bg-white',
+      protein: '6g',
+      netWeight: '35g',
+      packaging: 'Empaque individual sellado',
+      sizes: [
+        { sizeKey: 'ind', label: 'Individual', size: '35g', pieces: '1 barra', price: 10.0 },
+      ],
+    },
+    {
+      slug: 'keto-bites-almendras-sal',
+      name: 'Keto Bites Almendras & Sal',
+      category: 'bites',
+      tagline: 'Dulce · Salado · Keto',
+      image: '/images/keto-bites-pack.jpg',
+      imageDetail: '/images/keto-bites-pack.jpg',
+      shortDesc: 'Bocaditos de chocolate amargo, almendras tostadas y sal de Maras. Irresistibles.',
+      description: 'Keto Bites de chocolate amargo con almendras tostadas y un toque de sal de Maras. La combinación perfecta entre dulce y salado, elaborada con ingredientes premium y cero azúcar añadida.',
+      highlights: ['Chocolate amargo premium', 'Almendras tostadas crujientes', 'Toque de sal de Maras', 'Sin azúcar añadida', 'Gluten free', '2 g de proteína por bite', 'Endulzado con eritritol y monk fruit', 'Ideal para antojitos sin culpa'],
+      badge: 'NUEVO',
+      accentClass: 'text-nk-olive',
+      btnClass: 'bg-nk-olive hover:bg-nk-choco text-nk-ivory',
+      cardBg: 'bg-nk-ivory2',
+      protein: '2g por bite',
+      netWeight: '70g / 141g',
+      packaging: 'Bolsa doypack resellable',
+      sizes: [
+        { sizeKey: 'pack-141', label: 'Bolsa Grande', size: '141g', pieces: 'Varios bites', price: 28.0 },
+        { sizeKey: 'pack-70', label: 'Bolsa Pequeña', size: '70g', pieces: 'Varios bites', price: 14.0 },
+      ],
+    },
+  ];
+
+  for (const p of products) {
+    const { sizes, ...data } = p;
+    await prisma.product.upsert({
+      where: { slug: data.slug },
+      update: { ...data },
+      create: {
+        ...data,
+        sizes: { create: sizes },
+      },
+    });
+    console.log(`✓ ${data.name}`);
+  }
+
+  console.log('\n🌱 Seed completo — todos los productos en BD');
+}
+
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
