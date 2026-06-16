@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CulqiService } from './culqi.service';
+import { MailService } from '../mail/mail.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getOfficialPrice, getShippingCents } from './catalog';
 
@@ -9,6 +10,7 @@ export class OrdersService {
   constructor(
     private prisma: PrismaService,
     private culqi: CulqiService,
+    private mail: MailService,
   ) {}
 
   async create(userId: string, dto: CreateOrderDto) {
@@ -80,6 +82,28 @@ export class OrdersService {
       include: { items: true },
     });
 
+    // Guarda la dirección en el perfil del usuario para autocompletar la próxima compra
+    if (isDelivery) {
+      await this.prisma.user
+        .update({
+          where: { id: userId },
+          data: {
+            phone: dto.phone ?? undefined,
+            address: dto.address ?? undefined,
+            district: dto.district ?? undefined,
+            city: dto.city ?? undefined,
+            reference: dto.reference ?? undefined,
+            mapsLink: dto.mapsLink ?? undefined,
+            zone: dto.zone ?? undefined,
+          },
+        })
+        .catch(() => null);
+    }
+
+    // Correos de confirmación (no bloquean la respuesta)
+    this.mail.sendOrderConfirmation(order).catch(() => null);
+    this.mail.sendAdminNotification(order).catch(() => null);
+
     return {
       orderId: order.id,
       status: order.status,
@@ -105,6 +129,26 @@ export class OrdersService {
         user: { select: { name: true, email: true } },
       },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // Un pedido: el dueño solo ve el suyo; el admin ve cualquiera
+  async findOne(orderId: string, userId: string, isAdmin: boolean) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true, user: { select: { name: true, email: true } } },
+    });
+    if (!order) return null;
+    if (!isAdmin && order.userId !== userId) return null;
+    return order;
+  }
+
+  // Cambia el estado del pedido (solo admin)
+  updateStatus(orderId: string, status: string) {
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: status as any },
+      include: { items: true },
     });
   }
 }

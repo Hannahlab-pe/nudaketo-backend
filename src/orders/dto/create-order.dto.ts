@@ -46,8 +46,8 @@ export class CreateOrderDto {
 
   // Zona de envío (solo si DELIVERY). El costo se calcula en el servidor.
   @IsOptional()
-  @IsIn(['lima', 'provincia'])
-  zone?: 'lima' | 'provincia';
+  @IsString()
+  zone?: string;
 
   // Datos de envío (requeridos si DELIVERY)
   @IsOptional() @IsString() customerName?: string;

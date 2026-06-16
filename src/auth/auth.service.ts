@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,20 +35,40 @@ export class AuthService {
     return this._buildResponse(user);
   }
 
-  private _buildResponse(user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-  }) {
+  // Devuelve el perfil sin la contraseña
+  publicUser(user: any) {
+    const { password: _pw, ...safe } = user;
+    return safe;
+  }
+
+  async getProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    return this.publicUser(user);
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(dto.name !== undefined ? { name: dto.name } : {}),
+        ...(dto.phone !== undefined ? { phone: dto.phone } : {}),
+        ...(dto.address !== undefined ? { address: dto.address } : {}),
+        ...(dto.district !== undefined ? { district: dto.district } : {}),
+        ...(dto.city !== undefined ? { city: dto.city } : {}),
+        ...(dto.reference !== undefined ? { reference: dto.reference } : {}),
+        ...(dto.mapsLink !== undefined ? { mapsLink: dto.mapsLink } : {}),
+        ...(dto.zone !== undefined ? { zone: dto.zone } : {}),
+      },
+    });
+    return this.publicUser(user);
+  }
+
+  private _buildResponse(user: any) {
     const token = this.jwt.sign({
       sub: user.id,
       email: user.email,
       role: user.role,
     });
-    return {
-      token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
-    };
+    return { token, user: this.publicUser(user) };
   }
 }

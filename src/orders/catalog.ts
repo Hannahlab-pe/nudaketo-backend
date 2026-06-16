@@ -22,16 +22,23 @@ export function getOfficialPrice(productId: number, sizeId: string): number | nu
 }
 
 /**
+ * Zonas de envío con su costo en soles (fuente de verdad en el servidor).
+ * Mantener en sincronía con el front (CartDrawer SHIPPING_ZONES).
+ */
+export const SHIPPING_ZONES: Record<string, number> = {
+  lima: 9.5, // Lima Metropolitana
+  provincia: 20,
+};
+
+/**
  * Costo de envío en céntimos, calculado en el servidor (anti-manipulación).
- * - Recojo en tienda: gratis
- * - Envío Lima: S/10
- * - Envío provincia: S/20
+ * Recojo en tienda = gratis. Envío = según zona seleccionada.
  */
 export function getShippingCents(
   fulfillment: 'PICKUP' | 'DELIVERY',
-  zone?: 'lima' | 'provincia',
+  zone?: string,
 ): number {
   if (fulfillment === 'PICKUP') return 0;
-  if (zone === 'provincia') return 2000;
-  return 1000; // Lima por defecto
+  const soles = (zone && SHIPPING_ZONES[zone]) || 9.5;
+  return Math.round(soles * 100);
 }

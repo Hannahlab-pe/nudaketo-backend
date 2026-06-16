@@ -13,6 +13,14 @@ model User {
   email     String   @unique
   password  String
   role      Role     @default(CLIENTE)
+  // Dirección guardada (autocompleta el checkout)
+  phone     String?
+  address   String?
+  district  String?
+  city      String?
+  reference String?
+  mapsLink  String?
+  zone      String?
   createdAt DateTime @default(now())
   orders    Order[]
 }
