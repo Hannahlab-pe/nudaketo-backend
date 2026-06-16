@@ -34,11 +34,20 @@ export class AuthService {
     return this._buildResponse(user);
   }
 
-  private _buildResponse(user: { id: string; name: string; email: string }) {
-    const token = this.jwt.sign({ sub: user.id, email: user.email });
+  private _buildResponse(user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  }) {
+    const token = this.jwt.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    });
     return {
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
     };
   }
 }
