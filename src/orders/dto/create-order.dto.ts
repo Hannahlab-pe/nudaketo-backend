@@ -31,7 +31,5 @@ export class CreateOrderDto {
   @Type(() => OrderItemDto)
   items: OrderItemDto[];
 
-  @IsInt()
-  @Min(1)
-  totalCents: number;
+  // El total lo calcula el servidor con precios oficiales (no se confía en el cliente)
 }
