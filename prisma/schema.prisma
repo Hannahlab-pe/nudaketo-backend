@@ -57,15 +57,31 @@ model ProductSize {
 }
 
 model Order {
-  id          String      @id @default(cuid())
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String
-  culqiCharge String
-  email       String
-  totalCents  Int
-  status      OrderStatus @default(PAID)
-  items       OrderItem[]
-  createdAt   DateTime    @default(now())
+  id           String      @id @default(cuid())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String
+  culqiCharge  String
+  email        String
+  totalCents   Int
+  status       OrderStatus @default(PAID)
+  // Entrega
+  fulfillment  Fulfillment @default(DELIVERY)
+  shippingCents Int        @default(0)
+  // Datos de envío (nulos si es recojo en tienda)
+  customerName String?
+  phone        String?
+  address      String?
+  district     String?
+  city         String?
+  reference    String?
+  mapsLink     String?
+  items        OrderItem[]
+  createdAt    DateTime    @default(now())
+}
+
+enum Fulfillment {
+  PICKUP
+  DELIVERY
 }
 
 model OrderItem {

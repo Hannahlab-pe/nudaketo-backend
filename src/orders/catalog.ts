@@ -20,3 +20,18 @@ export const CATALOG: Record<number, Record<string, number>> = {
 export function getOfficialPrice(productId: number, sizeId: string): number | null {
   return CATALOG[productId]?.[sizeId] ?? null;
 }
+
+/**
+ * Costo de envío en céntimos, calculado en el servidor (anti-manipulación).
+ * - Recojo en tienda: gratis
+ * - Envío Lima: S/10
+ * - Envío provincia: S/20
+ */
+export function getShippingCents(
+  fulfillment: 'PICKUP' | 'DELIVERY',
+  zone?: 'lima' | 'provincia',
+): number {
+  if (fulfillment === 'PICKUP') return 0;
+  if (zone === 'provincia') return 2000;
+  return 1000; // Lima por defecto
+}

@@ -1,4 +1,13 @@
-import { IsString, IsEmail, IsInt, IsArray, ValidateNested, Min } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsInt,
+  IsArray,
+  ValidateNested,
+  Min,
+  IsIn,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemDto {
@@ -31,5 +40,23 @@ export class CreateOrderDto {
   @Type(() => OrderItemDto)
   items: OrderItemDto[];
 
-  // El total lo calcula el servidor con precios oficiales (no se confía en el cliente)
+  // Entrega: recojo en tienda o envío a domicilio
+  @IsIn(['PICKUP', 'DELIVERY'])
+  fulfillment: 'PICKUP' | 'DELIVERY';
+
+  // Zona de envío (solo si DELIVERY). El costo se calcula en el servidor.
+  @IsOptional()
+  @IsIn(['lima', 'provincia'])
+  zone?: 'lima' | 'provincia';
+
+  // Datos de envío (requeridos si DELIVERY)
+  @IsOptional() @IsString() customerName?: string;
+  @IsOptional() @IsString() phone?: string;
+  @IsOptional() @IsString() address?: string;
+  @IsOptional() @IsString() district?: string;
+  @IsOptional() @IsString() city?: string;
+  @IsOptional() @IsString() reference?: string;
+  @IsOptional() @IsString() mapsLink?: string;
+
+  // El total (productos + envío) lo calcula el servidor, no se confía en el cliente.
 }

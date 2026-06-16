@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CulqiService } from './culqi.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { getOfficialPrice } from './catalog';
+import { getOfficialPrice, getShippingCents } from './catalog';
 
 @Injectable()
 export class OrdersService {
@@ -17,7 +17,7 @@ export class OrdersService {
     }
 
     // Recalcula el total con precios OFICIALES del servidor (anti-manipulación)
-    let totalCents = 0;
+    let itemsCents = 0;
     const validatedItems = dto.items.map((i) => {
       const price = getOfficialPrice(i.productId, i.sizeId);
       if (price === null) {
@@ -26,7 +26,7 @@ export class OrdersService {
         );
       }
       const qty = Math.max(1, Math.floor(i.qty));
-      totalCents += Math.round(price * 100) * qty;
+      itemsCents += Math.round(price * 100) * qty;
       return {
         productId: i.productId,
         sizeId: i.sizeId,
@@ -36,9 +36,21 @@ export class OrdersService {
       };
     });
 
-    if (totalCents <= 0) {
+    if (itemsCents <= 0) {
       throw new BadRequestException('Total inválido');
     }
+
+    // Validación de datos de envío
+    const isDelivery = dto.fulfillment === 'DELIVERY';
+    if (isDelivery && (!dto.address || !dto.district || !dto.phone)) {
+      throw new BadRequestException(
+        'Faltan datos de envío (dirección, distrito y teléfono)',
+      );
+    }
+
+    // Costo de envío calculado en el servidor
+    const shippingCents = getShippingCents(dto.fulfillment, dto.zone);
+    const totalCents = itemsCents + shippingCents;
 
     const charge = await this.culqi.createCharge({
       amount: totalCents,
@@ -54,6 +66,15 @@ export class OrdersService {
         culqiCharge: charge.id,
         email: dto.email,
         totalCents,
+        fulfillment: dto.fulfillment,
+        shippingCents,
+        customerName: isDelivery ? dto.customerName ?? null : null,
+        phone: isDelivery ? dto.phone ?? null : null,
+        address: isDelivery ? dto.address ?? null : null,
+        district: isDelivery ? dto.district ?? null : null,
+        city: isDelivery ? dto.city ?? null : null,
+        reference: isDelivery ? dto.reference ?? null : null,
+        mapsLink: isDelivery ? dto.mapsLink ?? null : null,
         items: { create: validatedItems },
       },
       include: { items: true },
@@ -63,6 +84,7 @@ export class OrdersService {
       orderId: order.id,
       status: order.status,
       totalCents: order.totalCents,
+      shippingCents: order.shippingCents,
       createdAt: order.createdAt,
     };
   }
