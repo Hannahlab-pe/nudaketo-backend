@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { MailModule } from './mail/mail.module';
+import { SellersModule } from './sellers/sellers.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { MailModule } from './mail/mail.module';
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
     PrismaModule,
     MailModule,
+    SellersModule,
     AuthModule,
     OrdersModule,
     ProductsModule,

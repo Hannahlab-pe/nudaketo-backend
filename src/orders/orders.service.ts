@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CulqiService } from './culqi.service';
 import { MailService } from '../mail/mail.service';
+import { SellersService } from '../sellers/sellers.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getOfficialPrice, getShippingCents } from './catalog';
 
@@ -11,6 +12,7 @@ export class OrdersService {
     private prisma: PrismaService,
     private culqi: CulqiService,
     private mail: MailService,
+    private sellers: SellersService,
   ) {}
 
   async create(userId: string, dto: CreateOrderDto) {
@@ -52,7 +54,24 @@ export class OrdersService {
 
     // Costo de envío calculado en el servidor
     const shippingCents = getShippingCents(dto.fulfillment, dto.zone);
-    const totalCents = itemsCents + shippingCents;
+
+    // Código de vendedor: descuento (sobre productos) + comisión (snapshot)
+    let sellerId: string | null = null;
+    let sellerCode: string | null = null;
+    let discountCents = 0;
+    let commissionCents = 0;
+    if (dto.sellerCode) {
+      const seller = await this.sellers.findByCode(dto.sellerCode);
+      if (seller && seller.role === 'VENDEDOR') {
+        sellerId = seller.id;
+        sellerCode = seller.sellerCode;
+        discountCents = Math.round((itemsCents * (seller.discountPct || 0)) / 100);
+        const netItems = itemsCents - discountCents;
+        commissionCents = Math.round((netItems * (seller.commissionPct || 0)) / 100);
+      }
+    }
+
+    const totalCents = itemsCents - discountCents + shippingCents;
 
     const charge = await this.culqi.createCharge({
       amount: totalCents,
@@ -77,6 +96,10 @@ export class OrdersService {
         city: isDelivery ? dto.city ?? null : null,
         reference: isDelivery ? dto.reference ?? null : null,
         mapsLink: isDelivery ? dto.mapsLink ?? null : null,
+        sellerId,
+        sellerCode,
+        discountCents,
+        commissionCents,
         items: { create: validatedItems },
       },
       include: { items: true },

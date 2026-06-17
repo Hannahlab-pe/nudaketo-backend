@@ -113,11 +113,18 @@ export class MailService {
 
   private deliveryBox(order: any) {
     if (order.fulfillment === 'PICKUP') {
+      const name = process.env.STORE_NAME || 'NUDA KETO';
+      const address = process.env.STORE_ADDRESS || 'Av. Ejemplo 123, Miraflores, Lima';
+      const hours = process.env.STORE_HOURS || 'Lunes a sábado · 10:00 am – 7:00 pm';
+      const maps = process.env.STORE_MAPS || 'https://www.google.com/maps/search/?api=1&query=NUDA+KETO+Lima';
       return `
       <div style="margin-top:20px;padding:16px;border:1px solid ${ARENA};border-radius:12px">
-        <p style="margin:0;color:${MUTED};font-size:11px;letter-spacing:2px">ENTREGA</p>
-        <p style="margin:6px 0 0;color:${CHOCO};font-size:14px;font-weight:bold">Recojo en tienda</p>
-        <p style="margin:4px 0 0;color:${MUTED};font-size:13px">Coordinaremos contigo el día y hora de recojo.</p>
+        <p style="margin:0;color:${MUTED};font-size:11px;letter-spacing:2px">RECOJO EN TIENDA</p>
+        <p style="margin:6px 0 0;color:${CHOCO};font-size:14px;font-weight:bold">${name}</p>
+        <p style="margin:2px 0 0;color:${CHOCO};font-size:13px">${address}</p>
+        <p style="margin:2px 0 0;color:${MUTED};font-size:12px">${hours}</p>
+        <p style="margin:8px 0 0"><a href="${maps}" style="color:${GOLD};font-size:13px;font-weight:bold;text-decoration:none">Ver en Google Maps →</a></p>
+        <p style="margin:10px 0 0;color:${MUTED};font-size:12px">Te avisaremos por correo cuando tu pedido esté listo para recoger.</p>
       </div>`;
     }
     const dir = [order.address, order.district, order.city].filter(Boolean).join(', ');

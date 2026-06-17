@@ -49,6 +49,9 @@ export class CreateOrderDto {
   @IsString()
   zone?: string;
 
+  // Código de vendedor (opcional)
+  @IsOptional() @IsString() sellerCode?: string;
+
   // Datos de envío (requeridos si DELIVERY)
   @IsOptional() @IsString() customerName?: string;
   @IsOptional() @IsString() phone?: string;
