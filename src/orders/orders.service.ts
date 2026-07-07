@@ -52,8 +52,8 @@ export class OrdersService {
       );
     }
 
-    // Costo de envío calculado en el servidor
-    const shippingCents = getShippingCents(dto.fulfillment, dto.zone);
+    // Costo de envío calculado en el servidor (gratis si supera el umbral)
+    const shippingCents = getShippingCents(dto.fulfillment, dto.zone, itemsCents);
 
     // Código de vendedor: descuento (sobre productos) + comisión (snapshot)
     let sellerId: string | null = null;
