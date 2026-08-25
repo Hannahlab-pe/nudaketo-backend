@@ -4,7 +4,7 @@ import { CulqiService } from './culqi.service';
 import { MailService } from '../mail/mail.service';
 import { SellersService } from '../sellers/sellers.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { getOfficialPrice, getShippingCents } from './catalog';
+import { getOfficialPrice, getShippingCents, hasRefrigerated } from './catalog';
 
 @Injectable()
 export class OrdersService {
@@ -49,6 +49,13 @@ export class OrdersService {
     if (isDelivery && (!dto.address || !dto.district || !dto.phone)) {
       throw new BadRequestException(
         'Faltan datos de envío (dirección, distrito y teléfono)',
+      );
+    }
+
+    // Cadena de frío: tortas y cuchareables no salen de Lima
+    if (isDelivery && dto.zone !== 'lima' && hasRefrigerated(validatedItems)) {
+      throw new BadRequestException(
+        'Tu pedido incluye productos refrigerados: solo entregamos en Lima Metropolitana o por recojo en tienda.',
       );
     }
 
