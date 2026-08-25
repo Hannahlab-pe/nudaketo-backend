@@ -4,9 +4,10 @@ import { OrdersController } from './orders.controller';
 import { CulqiService } from './culqi.service';
 import { SellersModule } from '../sellers/sellers.module';
 import { ProductsModule } from '../products/products.module';
+import { OdooModule } from '../odoo/odoo.module';
 
 @Module({
-  imports: [SellersModule, ProductsModule],
+  imports: [SellersModule, ProductsModule, OdooModule],
   providers: [OrdersService, CulqiService],
   controllers: [OrdersController],
 })

@@ -1,20 +1,24 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CulqiService } from './culqi.service';
 import { MailService } from '../mail/mail.service';
 import { SellersService } from '../sellers/sellers.service';
+import { OdooService } from '../odoo/odoo.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getShippingCents } from './catalog';
 import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
+
   constructor(
     private prisma: PrismaService,
     private culqi: CulqiService,
     private mail: MailService,
     private sellers: SellersService,
     private products: ProductsService,
+    private odoo: OdooService,
   ) {}
 
   async create(userId: string, dto: CreateOrderDto) {
@@ -22,9 +26,10 @@ export class OrdersService {
       throw new BadRequestException('El pedido no tiene productos');
     }
 
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
     // Recalcula el total con los precios OFICIALES de la BD (anti-manipulación).
-    // La fuente de verdad es la tabla Product, que es lo que edita el admin:
-    // así un cambio de precio en el panel aplica al instante, sin deploy.
+    // La fuente de verdad es la tabla Product, que es lo que edita el admin.
     let itemsCents = 0;
     const validatedItems: {
       productId: number;
@@ -147,6 +152,25 @@ export class OrdersService {
         })
         .catch(() => null);
     }
+
+    // Sincronizar con Odoo (no bloquea la respuesta)
+    this.odoo.crearOrdenVenta({
+      nudaketoOrderId: order.id,
+      customerEmail: order.email,
+      customerName: order.customerName ?? user?.name ?? null,
+      phone: order.phone,
+      address: order.address,
+      city: order.city,
+      items: order.items.map((i) => ({
+        productId: i.productId,
+        sizeId: i.sizeId,
+        name: i.name,
+        qty: i.qty,
+        price: i.price,
+      })),
+      totalCents: order.totalCents,
+      culqiChargeId: order.culqiCharge,
+    }).catch((err) => this.logger.error(`Odoo sync falló para orden ${order.id}: ${err.message}`));
 
     // Correos de confirmación (no bloquean la respuesta)
     this.mail.sendOrderConfirmation(order).catch(() => null);
