@@ -1,0 +1,1119 @@
+// GENERADO desde el catalogo del frontend (src/data/products.js).
+// Se usa solo para poblar la BD la primera vez. Despues de eso la fuente de
+// verdad es la tabla Product: lo que edite el admin manda.
+
+export type SeedSize = { sizeKey: string; label: string; size: string; pieces: string; price: number; sortOrder: number };
+export type SeedProduct = {
+  id: number; slug: string; name: string; category: string; tagline: string;
+  image: string; imageDetail: string; shortDesc: string; description: string;
+  highlights: string[]; ingredients: string[];
+  nutriServing: string | null; nutriKcal: number | null; nutriFat: string | null;
+  nutriCarbs: string | null; nutriProtein: string | null;
+  badge: string | null; accentClass: string; btnClass: string; cardBg: string;
+  protein: string | null; netWeight: string | null; packaging: string;
+  refrigerated: boolean; sortOrder: number; sizes: SeedSize[];
+};
+
+export const SEED_PRODUCTS: SeedProduct[] = [
+  {
+    "id": 1,
+    "slug": "galleton-chips-almendras",
+    "name": "Galletón Chips & Almendras",
+    "category": "galletones",
+    "tagline": "Crujiente · Keto · Premium",
+    "image": "/images/chips-almendras-lifestyle.jpg",
+    "imageDetail": "/images/chips-almendras-pack.jpg",
+    "shortDesc": "Harina de almendra, chips de chocolate sin azúcar y almendras laminadas tostadas.",
+    "description": "Galletón keto de vainilla con chips de chocolate y almendra en hojuela. Crujiente por fuera, suave por dentro y lleno de sabor.",
+    "highlights": [
+      "Vainilla natural y textura chewy",
+      "Chips de chocolate 70%",
+      "Almendra en hojuela",
+      "Endulzado con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "6 g de proteína por galletón",
+      "Ideal como snack saludable o acompañamiento de café"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Vainilla natural",
+      "Proteína Whey Isolate",
+      "Alulosa con monk fruit",
+      "Lácteos",
+      "Aceite de coco",
+      "Huevo",
+      "Chips de chocolate (70%)",
+      "Almendra en hojuela"
+    ],
+    "nutriServing": "1 galletón · 45 g",
+    "nutriKcal": 205,
+    "nutriFat": "17 g",
+    "nutriCarbs": "8 g",
+    "nutriProtein": "6 g",
+    "badge": "MÁS VENDIDO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": "6g",
+    "netWeight": "45g / 135g",
+    "packaging": "Bolsa doypack resellable",
+    "refrigerated": false,
+    "sortOrder": 0,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "45g",
+        "pieces": "1 galletón",
+        "price": 9.9,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "pack",
+        "label": "Pack x3",
+        "size": "135g",
+        "pieces": "3 galletones",
+        "price": 28.5,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "galleton-doble-cacao",
+    "name": "Galletón Doble Cacao",
+    "category": "galletones",
+    "tagline": "Intenso · Chocolate · Keto",
+    "image": "/images/doble-cacao-lifestyle.jpg",
+    "imageDetail": "/images/doble-cacao-hero.jpg",
+    "shortDesc": "Chocolate intenso con textura chewy. Harina de almendra y doble cacao puro sin azúcar.",
+    "description": "Galletón keto premium de chocolate intenso, elaborado con harina de almendra y doble cacao puro. Textura chewy perfecta, con chips de chocolate sin azúcar en cada galletón.",
+    "highlights": [
+      "Chocolate intenso y textura chewy",
+      "Doble cacao puro sin azúcar",
+      "Harina de almendra y coco como base",
+      "Endulzado con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "6 g de proteína por galletón",
+      "Ideal para los amantes del chocolate"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Cacao puro",
+      "Proteína Whey Isolate",
+      "Alulosa con monk fruit",
+      "Lácteos",
+      "Aceite de coco",
+      "MCT",
+      "Huevo",
+      "Chips de chocolate (70%)"
+    ],
+    "nutriServing": "1 galletón · 45 g",
+    "nutriKcal": 209,
+    "nutriFat": "17 g",
+    "nutriCarbs": "8 g",
+    "nutriProtein": "6 g",
+    "badge": null,
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": "6g",
+    "netWeight": "45g / 135g",
+    "packaging": "Bolsa doypack resellable",
+    "refrigerated": false,
+    "sortOrder": 1,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "45g",
+        "pieces": "1 galletón",
+        "price": 9.9,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "pack",
+        "label": "Pack x3",
+        "size": "135g",
+        "pieces": "3 galletones",
+        "price": 28.5,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "galleton-vainilla-chips",
+    "name": "Galletón Vainilla Chips",
+    "category": "galletones",
+    "tagline": "Suave · Aromático · Keto",
+    "image": "/images/vainilla-chips-pack.jpg",
+    "imageDetail": "/images/vainilla-chips-pack.jpg",
+    "shortDesc": "Harina de almendra con vainilla natural y chips de chocolate sin azúcar.",
+    "description": "Galletón keto premium elaborado con harina de almendra y vainilla natural, combinado con chips de chocolate sin azúcar para lograr un equilibrio perfecto entre suavidad, dulzor y textura.",
+    "highlights": [
+      "Vainilla natural y textura chewy",
+      "Chips de chocolate 70%",
+      "Endulzado con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "5 g de proteína por galletón",
+      "Elaborado con ingredientes seleccionados",
+      "Ideal para snack, lonchera saludable o acompañamiento de café"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Vainilla natural",
+      "Proteína Whey Isolate",
+      "Alulosa con monk fruit",
+      "Lácteos",
+      "Aceite de coco",
+      "Huevo",
+      "Chips de chocolate (70%)"
+    ],
+    "nutriServing": "1 galletón · 45 g",
+    "nutriKcal": 196,
+    "nutriFat": "16 g",
+    "nutriCarbs": "8 g",
+    "nutriProtein": "5 g",
+    "badge": null,
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": "5g",
+    "netWeight": "45g / 135g",
+    "packaging": "Bolsa doypack resellable",
+    "refrigerated": false,
+    "sortOrder": 2,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "45g",
+        "pieces": "1 galletón",
+        "price": 9.9,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "pack",
+        "label": "Pack x3",
+        "size": "135g",
+        "pieces": "3 galletones",
+        "price": 28.5,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "slug": "galleton-cacao-nibs",
+    "name": "Galletón Cacao Nibs",
+    "category": "galletones",
+    "tagline": "Intenso · Auténtico · Keto",
+    "image": "/images/cacao-nibs-pack.jpg",
+    "imageDetail": "/images/cacao-nibs-pack.jpg",
+    "shortDesc": "Harina de almendra, cacao puro y nibs de cacao tostado. Sabor intenso y auténtico.",
+    "description": "Galletón keto premium elaborado con harina de almendra, cacao puro y nibs de cacao tostado, pensado para quienes disfrutan sabores intensos y auténticos en una alternativa saludable.",
+    "highlights": [
+      "Chocolate intenso y textura chewy",
+      "Con nibs de cacao tostado",
+      "Endulzado con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "7 g de proteína por galletón",
+      "Ingredientes seleccionados de alta calidad",
+      "Ideal como snack saludable o acompañamiento de café"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Vainilla natural",
+      "Proteína Whey Isolate",
+      "Alulosa con monk fruit",
+      "Lácteos",
+      "Aceite de coco",
+      "Huevo",
+      "Cacao puro",
+      "Nibs de cacao"
+    ],
+    "nutriServing": "1 galletón · 45 g",
+    "nutriKcal": 192,
+    "nutriFat": "16 g",
+    "nutriCarbs": "7 g",
+    "nutriProtein": "7 g",
+    "badge": null,
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": "7g",
+    "netWeight": "45g / 135g",
+    "packaging": "Bolsa doypack resellable",
+    "refrigerated": false,
+    "sortOrder": 3,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "45g",
+        "pieces": "1 galletón",
+        "price": 9.9,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "pack",
+        "label": "Pack x3",
+        "size": "135g",
+        "pieces": "3 galletones",
+        "price": 28.5,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "barra-cacao-nuts",
+    "name": "Cacao Nuts",
+    "category": "barras",
+    "tagline": "Energizante · Intenso · Keto",
+    "image": "/images/barra-cacao-pack.jpg",
+    "imageDetail": "/images/barra-cacao-hero.jpg",
+    "shortDesc": "Barra de cacao puro con frutos secos seleccionados. Energía y sabor intenso.",
+    "description": "Barra keto premium elaborada con cacao puro y frutos secos seleccionados, diseñada para ofrecer energía, saciedad y una experiencia intensa de sabor en un formato práctico y saludable.",
+    "highlights": [
+      "Cacao intenso y frutos secos crocantes",
+      "Endulzada con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Fuente de grasas saludables",
+      "6 g de proteína por barra",
+      "Snack práctico y altamente consumible",
+      "Ideal para consumo diario o on-the-go"
+    ],
+    "ingredients": [
+      "Frutos secos",
+      "Coco rallado sin azúcar",
+      "Chía",
+      "Proteína Whey Isolate",
+      "Manteca de cacao",
+      "Mantequilla sin sal",
+      "Alulosa con monk fruit",
+      "Cacao puro"
+    ],
+    "nutriServing": "1 barra · 35 g",
+    "nutriKcal": 192,
+    "nutriFat": "16 g",
+    "nutriCarbs": "6 g",
+    "nutriProtein": "6 g",
+    "badge": null,
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-gold hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": "6g",
+    "netWeight": "35g",
+    "packaging": "Empaque individual sellado",
+    "refrigerated": false,
+    "sortOrder": 4,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "35g",
+        "pieces": "1 barra",
+        "price": 10.9,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "slug": "almond-bar",
+    "name": "Almond Bar",
+    "category": "barras",
+    "tagline": "Suave · Cremoso · Keto",
+    "image": "/images/almond-bar-pack.jpg",
+    "imageDetail": "/images/almond-bar-pack.jpg",
+    "shortDesc": "Barra a base de almendra real, textura suave y cremosa. Energía y saciedad.",
+    "description": "Barra keto premium elaborada a base de almendra, con una textura suave y cremosa, diseñada para quienes buscan energía y saciedad en un snack saludable y sofisticado.",
+    "highlights": [
+      "Elaborada con almendra real",
+      "Textura suave y saciante",
+      "Endulzada con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Fuente de grasas saludables",
+      "4 g de proteína por barra",
+      "Ideal para snack, pre entrenamiento o consumo on-the-go"
+    ],
+    "ingredients": [
+      "Harina de almendra",
+      "Almendra",
+      "Manteca de cacao",
+      "Mantequilla sin sal",
+      "Aceite de coco",
+      "Alulosa con monk fruit",
+      "Lecitina de soya",
+      "Proteína Whey Isolate"
+    ],
+    "nutriServing": "1 barra · 35 g",
+    "nutriKcal": 179,
+    "nutriFat": "18 g",
+    "nutriCarbs": "10 g",
+    "nutriProtein": "4 g",
+    "badge": null,
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": "4g",
+    "netWeight": "35g",
+    "packaging": "Empaque individual sellado",
+    "refrigerated": false,
+    "sortOrder": 5,
+    "sizes": [
+      {
+        "sizeKey": "ind",
+        "label": "Individual",
+        "size": "35g",
+        "pieces": "1 barra",
+        "price": 10.9,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "keto-bites-almendras-sal",
+    "name": "Keto Bites Almendras & Sal",
+    "category": "bites",
+    "tagline": "Dulce · Salado · Keto",
+    "image": "/images/keto-bites-pack.jpg",
+    "imageDetail": "/images/keto-bites-pack.jpg",
+    "shortDesc": "Bocaditos de chocolate amargo, almendras tostadas y sal de Maras. Irresistibles.",
+    "description": "Keto Bites de chocolate amargo con almendras tostadas y un toque de sal de Maras. La combinación perfecta entre dulce y salado, elaborada con ingredientes premium y cero azúcar añadida.",
+    "highlights": [
+      "Chocolate amargo 70%",
+      "Almendras en hojuelas",
+      "Toque de sal de Maras",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "2 g de proteína por bite",
+      "Endulzado con alulosa y extracto de monk fruit",
+      "Ideal para antojitos sin culpa"
+    ],
+    "ingredients": [
+      "Chocolate amargo (70%)",
+      "Manteca de cacao",
+      "Alulosa con monk fruit",
+      "MCT",
+      "Almendras en hojuelas"
+    ],
+    "nutriServing": "1 bite · 23.5 g aprox.",
+    "nutriKcal": 140,
+    "nutriFat": "12 g",
+    "nutriCarbs": "6 g",
+    "nutriProtein": "2 g",
+    "badge": null,
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": "2g por bite",
+    "netWeight": "70g / 141g",
+    "packaging": "Bolsa doypack resellable",
+    "refrigerated": false,
+    "sortOrder": 6,
+    "sizes": [
+      {
+        "sizeKey": "pack-141",
+        "label": "Bolsa Grande",
+        "size": "141g",
+        "pieces": "6 unidades",
+        "price": 31.9,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "pack-70",
+        "label": "Bolsa Pequeña",
+        "size": "70g",
+        "pieces": "3 unidades",
+        "price": 15.9,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "slug": "torta-trufa-chocolate",
+    "name": "Trufa de Chocolate Keto",
+    "category": "tortas",
+    "tagline": "Intensa · Húmeda · Keto",
+    "image": "/images/torta-trufa-chocolate.jpg",
+    "imageDetail": "/images/torta-trufa-chocolate.jpg",
+    "shortDesc": "Torta húmeda de chocolate amargo con ganache cremosa sin azúcar.",
+    "description": "Torta húmeda de chocolate amargo, de sabor intenso y textura suave, rellena y cubierta con una cremosa ganache de chocolate sin azúcar.",
+    "highlights": [
+      "Chocolate amargo 70%",
+      "Ganache cremosa sin azúcar",
+      "Textura húmeda e intensa",
+      "Endulzada con alulosa y extracto de monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Torta completa de 10 a 12 porciones",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Chocolate amargo (70%)",
+      "Alulosa con monk fruit",
+      "Huevos",
+      "Lácteos",
+      "Frutos secos",
+      "Cacao puro"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 7,
+    "sizes": [
+      {
+        "sizeKey": "porcion",
+        "label": "Porción individual",
+        "size": "1 porción",
+        "pieces": "Porción individual",
+        "price": 23,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "completa",
+        "label": "Torta completa",
+        "size": "10–12 porciones",
+        "pieces": "10 a 12 porciones",
+        "price": 220,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "slug": "torta-vainilla-frutos-rojos",
+    "name": "Torta Keto de Vainilla",
+    "category": "tortas",
+    "tagline": "Suave · Frutos rojos · Keto",
+    "image": "/images/torta-vainilla.jpg",
+    "imageDetail": "/images/torta-vainilla.jpg",
+    "shortDesc": "Torta suave de vainilla con mermelada de frutos rojos y frosting cremoso.",
+    "description": "Torta suave de vainilla con mermelada de frutos rojos y frosting cremoso. Ligera, aromática y sin azúcar añadida.",
+    "highlights": [
+      "Mermelada de frutos rojos",
+      "Frosting cremoso",
+      "Base de harina de almendra y coco",
+      "Endulzada con alulosa y Monk Fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Torta completa de 10 a 12 porciones",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Alulosa con Monk Fruit",
+      "Huevos",
+      "Lácteos",
+      "Frutos rojos",
+      "Chía"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-gold hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 8,
+    "sizes": [
+      {
+        "sizeKey": "porcion",
+        "label": "Porción individual",
+        "size": "1 porción",
+        "pieces": "Porción individual",
+        "price": 21,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "completa",
+        "label": "Torta completa",
+        "size": "10–12 porciones",
+        "pieces": "10 a 12 porciones",
+        "price": 197,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "slug": "torta-chocolate-avellana",
+    "name": "Chocolate Amargo y Avellana Keto",
+    "category": "tortas",
+    "tagline": "Intensa · Avellana · Keto",
+    "image": "/images/torta-choco-avellana.jpg",
+    "imageDetail": "/images/torta-choco-avellana.jpg",
+    "shortDesc": "Torta húmeda de chocolate amargo con harina de avellana y ganache.",
+    "description": "Torta húmeda e intensa de chocolate amargo, preparada con harina de avellana y cubierta con una cremosa ganache de chocolate.",
+    "highlights": [
+      "Chocolate amargo sin azúcar 70%",
+      "Harina de avellana",
+      "Ganache cremosa de chocolate",
+      "Endulzada con alulosa y Monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Torta completa de 10 a 12 porciones",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Chocolate amargo sin azúcar (70%)",
+      "Lácteos",
+      "Alulosa con Monk fruit",
+      "Huevos",
+      "Harina de avellana",
+      "Cacao puro"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 9,
+    "sizes": [
+      {
+        "sizeKey": "porcion",
+        "label": "Porción individual",
+        "size": "1 porción",
+        "pieces": "Porción individual",
+        "price": 21,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "completa",
+        "label": "Torta completa",
+        "size": "10–12 porciones",
+        "pieces": "10 a 12 porciones",
+        "price": 195,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "slug": "torta-carrot-cake",
+    "name": "Carrot Cake Keto Clásica",
+    "category": "tortas",
+    "tagline": "Especiada · Clásica · Keto",
+    "image": "/images/torta-carrot-cake.jpg",
+    "imageDetail": "/images/torta-carrot-cake.jpg",
+    "shortDesc": "Torta húmeda de zanahoria, nueces y pecanas con frosting de queso crema.",
+    "description": "Torta húmeda de zanahoria, nueces y pecanas, con un suave toque de canela y especias, rellena y cubierta con un cremoso frosting de queso crema.",
+    "highlights": [
+      "Zanahoria, nueces y pecanas",
+      "Frosting de queso crema",
+      "Toque de canela y especias",
+      "Endulzada con alulosa y Monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Torta completa de 10 a 12 porciones",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Alulosa con Monk fruit",
+      "Huevos",
+      "Lácteos",
+      "Zanahoria",
+      "Frutos secos",
+      "Especias"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 10,
+    "sizes": [
+      {
+        "sizeKey": "porcion",
+        "label": "Porción individual",
+        "size": "1 porción",
+        "pieces": "Porción individual",
+        "price": 20,
+        "sortOrder": 0
+      },
+      {
+        "sizeKey": "completa",
+        "label": "Torta completa",
+        "size": "10–12 porciones",
+        "pieces": "10 a 12 porciones",
+        "price": 193,
+        "sortOrder": 1
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "slug": "cuchareable-pistacho-velvet",
+    "name": "Pistacho Velvet",
+    "category": "cuchareables",
+    "tagline": "Cremoso · Pistacho · Keto",
+    "image": "/images/cuch-pistacho-velvet.jpg",
+    "imageDetail": "/images/cuch-pistacho-velvet.jpg",
+    "shortDesc": "Postre cuchareable de pistacho con proteína aislada y manteca de cacao.",
+    "description": "Postre keto cuchareable de pistacho, cremoso y aromático, elaborado con harina de almendra y pistacho, proteína aislada sabor vainilla y manteca de cacao.",
+    "highlights": [
+      "Pistacho real",
+      "Con proteína aislada sabor vainilla",
+      "Textura cremosa tipo velvet",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra y pistacho",
+      "Proteína aislada sabor vainilla",
+      "Alulosa con monk fruit",
+      "Huevo",
+      "Lácteos",
+      "Manteca de cacao",
+      "Pistachos"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 11,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 28,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "slug": "cuchareable-nuda-rocher",
+    "name": "Nuda Rocher",
+    "category": "cuchareables",
+    "tagline": "Chocolate · Avellana · Keto",
+    "image": "/images/cuch-nuda-rocher.jpg",
+    "imageDetail": "/images/cuch-nuda-rocher.jpg",
+    "shortDesc": "Postre cuchareable de chocolate amargo y avellanas con crocante.",
+    "description": "Postre keto cuchareable de chocolate amargo 70% con avellanas y un crocante irresistible. Intenso, cremoso y con proteína real.",
+    "highlights": [
+      "Chocolate amargo 70%",
+      "Avellanas y crocante",
+      "Con proteína aislada",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Chocolate amargo (70%)",
+      "Lácteos",
+      "Alulosa con monk fruit",
+      "Huevos",
+      "Harina de almendra",
+      "Cacao puro",
+      "Proteína aislada",
+      "Avellanas",
+      "Manteca de cacao"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 12,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 26,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "slug": "cuchareable-alfajor-velvet",
+    "name": "Alfajor Velvet",
+    "category": "cuchareables",
+    "tagline": "Coco · Chocolate · Keto",
+    "image": "/images/cuch-alfajor-velvet.jpg",
+    "imageDetail": "/images/cuch-alfajor-velvet.jpg",
+    "shortDesc": "Postre cuchareable con crema de coco espesa, chocolate amargo y crumble.",
+    "description": "Postre keto cuchareable inspirado en el alfajor, con crema de coco espesa, chocolate amargo 70% y un crumble de almendra y coco.",
+    "highlights": [
+      "Crema de coco espesa",
+      "Chocolate amargo 70%",
+      "Crumble de almendra y coco",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Crema de coco espesa",
+      "Lácteos",
+      "Manteca de cacao",
+      "Alulosa con monk fruit",
+      "Harina de almendra y coco",
+      "Huevo",
+      "Chocolate amargo (70%)"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-gold hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 13,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 26,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "slug": "cuchareable-cheesecake",
+    "name": "Cheesecake Clásico",
+    "category": "cuchareables",
+    "tagline": "Frutos rojos · Cremoso · Keto",
+    "image": "/images/cuch-cheesecake.jpg",
+    "imageDetail": "/images/cuch-cheesecake.jpg",
+    "shortDesc": "Cheesecake cuchareable con mermelada de frutos rojos y base de almendra.",
+    "description": "Cheesecake keto cuchareable, cremoso y equilibrado, coronado con mermelada de frutos rojos y con base de harina de almendra.",
+    "highlights": [
+      "Mermelada de frutos rojos",
+      "Base de harina de almendra",
+      "Textura cremosa clásica",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra",
+      "Lácteos",
+      "Alulosa con monk fruit",
+      "Gelatina sin sabor",
+      "Frutos rojos",
+      "Chía"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 14,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 26,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "slug": "cuchareable-tiramisu",
+    "name": "Tiramisú",
+    "category": "cuchareables",
+    "tagline": "Café · Cacao · Keto",
+    "image": "/images/cuch-tiramisu.jpg",
+    "imageDetail": "/images/cuch-tiramisu.jpg",
+    "shortDesc": "Tiramisú cuchareable con café, cacao puro y chocolate amargo.",
+    "description": "Tiramisú keto cuchareable con capas de bizcocho de almendra, café y crema, terminado con cacao puro espolvoreado.",
+    "highlights": [
+      "Café real y cacao puro",
+      "Chocolate amargo 70%",
+      "Con proteína aislada",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra",
+      "Proteína aislada",
+      "Alulosa con monk fruit",
+      "Huevos",
+      "Lácteos",
+      "Café",
+      "Cacao puro",
+      "Chocolate amargo (70%)"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-choco",
+    "btnClass": "bg-nk-choco hover:bg-nk-gold text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 15,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 26,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "slug": "cuchareable-tres-leches",
+    "name": "Tres Leches Keto",
+    "category": "cuchareables",
+    "tagline": "Clásico · Cremoso · Keto",
+    "image": "/images/cuch-tres-leches.jpg",
+    "imageDetail": "/images/cuch-tres-leches.jpg",
+    "shortDesc": "Tres leches cuchareable con leche de almendra y coco, y toque de especias.",
+    "description": "Tres leches keto cuchareable, húmedo y cremoso, elaborado con leche de almendra y coco y un suave toque de especias.",
+    "highlights": [
+      "Leche de almendra y coco",
+      "Toque suave de especias",
+      "Base de harina de almendra y coco",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra y coco",
+      "Alulosa con monk fruit",
+      "Lácteos",
+      "Leche de almendra y coco",
+      "Especias",
+      "Huevo"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-gold hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 16,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 25,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "slug": "cuchareable-carrot-cake",
+    "name": "Carrot Cake Cuchareable",
+    "category": "cuchareables",
+    "tagline": "Especiado · Queso crema · Keto",
+    "image": "/images/cuch-carrot-cake.jpg",
+    "imageDetail": "/images/cuch-carrot-cake.jpg",
+    "shortDesc": "Capas de bizcocho de zanahoria y especias con suave crema de queso.",
+    "description": "Postre keto de carrot cake con capas de bizcocho húmedo de zanahoria y especias, acompañado de una suave crema de queso. Cremoso, aromático y perfecto para disfrutar a cucharadas.",
+    "highlights": [
+      "Bizcocho húmedo de zanahoria",
+      "Crema de queso suave",
+      "Canela, jengibre y nuez moscada",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra",
+      "Alulosa con monk fruit",
+      "Huevos",
+      "Lácteos",
+      "Zanahoria",
+      "Frutos secos",
+      "Especias (canela, jengibre, nuez moscada)",
+      "Crema de queso"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-olive",
+    "btnClass": "bg-nk-olive hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-white",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 17,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 25,
+        "sortOrder": 0
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "slug": "cuchareable-mousse-maracuya",
+    "name": "Mousse de Maracuyá",
+    "category": "cuchareables",
+    "tagline": "Fresco · Cítrico · Keto",
+    "image": "/images/cuch-mousse-maracuya.jpg",
+    "imageDetail": "/images/cuch-mousse-maracuya.jpg",
+    "shortDesc": "Mousse cuchareable de maracuyá con pulpa real. Fresco y ligero.",
+    "description": "Mousse keto cuchareable de maracuyá, ligero y refrescante, elaborado con pulpa real de maracuyá sobre una base de harina de almendra.",
+    "highlights": [
+      "Pulpa real de maracuyá",
+      "Textura ligera tipo mousse",
+      "Base de harina de almendra",
+      "Endulzado con alulosa y monk fruit",
+      "Sin azúcar añadida",
+      "Gluten free",
+      "Listo para comer a cucharadas",
+      "Producto refrigerado"
+    ],
+    "ingredients": [
+      "Harina de almendra",
+      "Lácteos",
+      "Alulosa con monk fruit",
+      "Pulpa de maracuyá"
+    ],
+    "nutriServing": null,
+    "nutriKcal": null,
+    "nutriFat": null,
+    "nutriCarbs": null,
+    "nutriProtein": null,
+    "badge": "NUEVO",
+    "accentClass": "text-nk-gold",
+    "btnClass": "bg-nk-gold hover:bg-nk-choco text-nk-ivory",
+    "cardBg": "bg-nk-ivory2",
+    "protein": null,
+    "netWeight": null,
+    "packaging": "Refrigerado · solo Lima",
+    "refrigerated": true,
+    "sortOrder": 18,
+    "sizes": [
+      {
+        "sizeKey": "unico",
+        "label": "Vaso individual",
+        "size": "1 unidad",
+        "pieces": "Vaso individual",
+        "price": 21,
+        "sortOrder": 0
+      }
+    ]
+  }
+];

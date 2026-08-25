@@ -47,27 +47,54 @@ model Product {
   shortDesc   String
   description String
   highlights  String[]
+  ingredients String[]      @default([])
+  // Información nutricional (null mientras el cliente no la entregue)
+  nutriServing String?
+  nutriKcal    Int?
+  nutriFat     String?
+  nutriCarbs   String?
+  nutriProtein String?
   badge       String?
   accentClass String
   btnClass    String
   cardBg      String
-  protein     String
-  netWeight   String
+  protein     String?
+  netWeight   String?
   packaging   String
+  // Cadena de frío: no se puede enviar a provincia
+  refrigerated Boolean      @default(false)
+  // null = sin control de stock; 0 = agotado
+  stock       Int?
+  sortOrder   Int           @default(0)
   active      Boolean       @default(true)
   sizes       ProductSize[]
   createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt @default(now())
 }
 
 model ProductSize {
   id        String  @id @default(cuid())
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
   sizeKey   String
   label     String
   size      String
   pieces    String
   price     Float
+  sortOrder Int     @default(0)
+
+  @@unique([productId, sizeKey])
+}
+
+// Imágenes subidas desde el panel admin.
+// Se guardan en Postgres porque Railway borra el disco en cada deploy y no
+// hay servicio de almacenamiento externo configurado. Se sirven por /media/:id.
+model MediaAsset {
+  id        String   @id @default(cuid())
+  mime      String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
 }
 
 model Order {

@@ -4,7 +4,8 @@ import { CulqiService } from './culqi.service';
 import { MailService } from '../mail/mail.service';
 import { SellersService } from '../sellers/sellers.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { getOfficialPrice, getShippingCents, hasRefrigerated } from './catalog';
+import { getShippingCents } from './catalog';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class OrdersService {
@@ -13,6 +14,7 @@ export class OrdersService {
     private culqi: CulqiService,
     private mail: MailService,
     private sellers: SellersService,
+    private products: ProductsService,
   ) {}
 
   async create(userId: string, dto: CreateOrderDto) {
@@ -20,25 +22,35 @@ export class OrdersService {
       throw new BadRequestException('El pedido no tiene productos');
     }
 
-    // Recalcula el total con precios OFICIALES del servidor (anti-manipulación)
+    // Recalcula el total con los precios OFICIALES de la BD (anti-manipulación).
+    // La fuente de verdad es la tabla Product, que es lo que edita el admin:
+    // así un cambio de precio en el panel aplica al instante, sin deploy.
     let itemsCents = 0;
-    const validatedItems = dto.items.map((i) => {
-      const price = getOfficialPrice(i.productId, i.sizeId);
+    const validatedItems: {
+      productId: number;
+      sizeId: string;
+      name: string;
+      qty: number;
+      price: number;
+    }[] = [];
+
+    for (const i of dto.items) {
+      const price = await this.products.getOfficialPrice(i.productId, i.sizeId);
       if (price === null) {
         throw new BadRequestException(
-          `Producto inválido (id ${i.productId}, ${i.sizeId})`,
+          `Ese producto ya no está disponible (id ${i.productId}, ${i.sizeId}). Actualiza tu carrito.`,
         );
       }
       const qty = Math.max(1, Math.floor(i.qty));
       itemsCents += Math.round(price * 100) * qty;
-      return {
+      validatedItems.push({
         productId: i.productId,
         sizeId: i.sizeId,
         name: i.name,
         qty,
         price,
-      };
-    });
+      });
+    }
 
     if (itemsCents <= 0) {
       throw new BadRequestException('Total inválido');
@@ -52,11 +64,17 @@ export class OrdersService {
       );
     }
 
-    // Cadena de frío: tortas y cuchareables no salen de Lima
-    if (isDelivery && dto.zone !== 'lima' && hasRefrigerated(validatedItems)) {
-      throw new BadRequestException(
-        'Tu pedido incluye productos refrigerados: solo entregamos en Lima Metropolitana o por recojo en tienda.',
+    // Cadena de frío: los refrigerados no salen de Lima. Se consulta a la BD
+    // porque el front es manipulable y acá hay productos de S/220.
+    if (isDelivery && dto.zone !== 'lima') {
+      const cold = await this.products.refrigeratedIds(
+        validatedItems.map((i) => i.productId),
       );
+      if (cold.size > 0) {
+        throw new BadRequestException(
+          'Tu pedido incluye productos refrigerados: solo entregamos en Lima Metropolitana o por recojo en tienda.',
+        );
+      }
     }
 
     // Costo de envío calculado en el servidor (gratis si supera el umbral)
