@@ -6,6 +6,21 @@ export interface OdooLineItem {
   price: number;
 }
 
+export interface OdooProductSize {
+  sizeKey: string;
+  label: string;
+  price: number;
+}
+
+export interface OdooProductPayload {
+  productId: number;
+  name: string;
+  description?: string | null;
+  shortDesc?: string | null;
+  sizes: OdooProductSize[];
+  imageId?: string | null;
+}
+
 export interface OdooOrderPayload {
   nudaketoOrderId: string;
   customerEmail: string;

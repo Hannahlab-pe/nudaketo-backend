@@ -1,10 +1,12 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   BadRequestException,
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { OdooService } from '../odoo/odoo.service';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 
 /** Forma que espera el frontend (misma que tenía el archivo estático). */
@@ -55,7 +57,9 @@ function toPublic(p: any) {
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(ProductsService.name);
+
+  constructor(private prisma: PrismaService, private odoo: OdooService) {}
 
   // ── Público ────────────────────────────────────────────────────────────
   async findAll() {
@@ -104,6 +108,16 @@ export class ProductsService {
       },
       include: { sizes: true },
     });
+
+    this.odoo.sincronizarProducto({
+      productId: created.id,
+      name: created.name,
+      shortDesc: created.shortDesc,
+      description: created.description,
+      imageId: created.image?.split('/media/')[1] ?? null,
+      sizes: created.sizes.map((s) => ({ sizeKey: s.sizeKey, label: s.label, price: s.price })),
+    }).catch((err) => this.logger.error(`Odoo sync producto ${created.id}: ${err.message}`));
+
     return toPublic(created);
   }
 
@@ -146,6 +160,16 @@ export class ProductsService {
       data,
       include: { sizes: true },
     });
+
+    this.odoo.actualizarProductoOdoo({
+      productId: updated.id,
+      name: updated.name,
+      shortDesc: updated.shortDesc,
+      description: updated.description,
+      imageId: updated.image?.split('/media/')[1] ?? null,
+      sizes: updated.sizes.map((s) => ({ sizeKey: s.sizeKey, label: s.label, price: s.price })),
+    }).catch((err) => this.logger.error(`Odoo update producto ${updated.id}: ${err.message}`));
+
     return toPublic(updated);
   }
 

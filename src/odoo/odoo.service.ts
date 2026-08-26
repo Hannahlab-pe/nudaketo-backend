@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OdooLineItem, OdooOrderPayload } from './odoo.types';
+import { PrismaService } from '../prisma/prisma.service';
+import { OdooLineItem, OdooOrderPayload, OdooProductPayload } from './odoo.types';
 
 @Injectable()
 export class OdooService implements OnModuleInit {
@@ -12,15 +13,16 @@ export class OdooService implements OnModuleInit {
   private readonly db: string;
   private readonly username: string;
   private readonly apiKey: string;
-  private readonly websiteId: number;
+  private readonly websiteId: number | null;
 
-  constructor(private config: ConfigService) {
+  constructor(private config: ConfigService, private prisma: PrismaService) {
     this.enabled = this.config.get('ODOO_ENABLED') === 'true';
     this.url = this.config.get('ODOO_URL') ?? '';
     this.db = this.config.get('ODOO_DB') ?? '';
     this.username = this.config.get('ODOO_USERNAME') ?? '';
     this.apiKey = this.config.get('ODOO_API_KEY') ?? '';
-    this.websiteId = Number(this.config.get('ODOO_WEBSITE_ID') ?? 1);
+    const wsId = this.config.get('ODOO_WEBSITE_ID');
+    this.websiteId = wsId ? Number(wsId) : null;
   }
 
   async onModuleInit() {
@@ -142,7 +144,7 @@ export class OdooService implements OnModuleInit {
 
     const saleOrderId = await this.ejecutar<number>('sale.order', 'create', [{
       partner_id: partnerId,
-      website_id: this.websiteId,
+      ...(this.websiteId ? { website_id: this.websiteId } : {}),
       client_order_ref: `NK-${payload.nudaketoOrderId}`,
       note: payload.culqiChargeId ? `Culqi: ${payload.culqiChargeId}` : '',
     }]);
@@ -170,5 +172,112 @@ export class OdooService implements OnModuleInit {
     this.logger.log(`Orden Odoo #${saleOrderId} creada y confirmada para NK-${payload.nudaketoOrderId}`);
 
     return saleOrderId;
+  }
+
+  // ── Sincronización de productos ────────────────────────────────────────
+
+  async sincronizarProducto(payload: OdooProductPayload): Promise<void> {
+    if (!this.enabled) return;
+
+    const atributoId = await this.resolverAtributoId('Presentacion');
+    const image1920 = await this.obtenerImagenBase64(payload.imageId);
+
+    const tmplData: Record<string, unknown> = {
+      name: payload.name,
+      type: 'consu',
+      sale_ok: true,
+      purchase_ok: false,
+      description_sale: payload.shortDesc ?? payload.description ?? false,
+      attribute_line_ids: [[5]],
+    };
+    if (image1920) tmplData.image_1920 = image1920;
+
+    const tmplId = await this.ejecutar<number>('product.template', 'create', [tmplData]);
+    this.logger.log(`Odoo: product.template #${tmplId} creado para "${payload.name}"`);
+
+    if (payload.sizes.length > 0) {
+      const valorIds = await Promise.all(
+        payload.sizes.map((s) =>
+          this.resolverValorAtributoId(atributoId, `${s.label} (${s.sizeKey})`),
+        ),
+      );
+      await this.ejecutar('product.template.attribute.line', 'create', [{
+        product_tmpl_id: tmplId,
+        attribute_id: atributoId,
+        value_ids: [[6, 0, valorIds]],
+      }]);
+
+      const variantes = await this.ejecutar<{ id: number; combination_indices: string }[]>(
+        'product.product', 'search_read',
+        [[['product_tmpl_id', '=', tmplId]]],
+        { fields: ['id', 'combination_indices'] },
+      );
+
+      for (let i = 0; i < payload.sizes.length && i < variantes.length; i++) {
+        const s = payload.sizes[i];
+        const v = variantes[i];
+        await this.ejecutar('product.product', 'write', [[v.id], {
+          default_code: `NK-${payload.productId}-${s.sizeKey}`,
+          lst_price: s.price,
+        }]);
+      }
+    }
+  }
+
+  async actualizarProductoOdoo(payload: OdooProductPayload): Promise<void> {
+    if (!this.enabled) return;
+
+    for (const s of payload.sizes) {
+      const ref = `NK-${payload.productId}-${s.sizeKey}`;
+      const variantes = await this.ejecutar<{ id: number; product_tmpl_id: number[] }[]>(
+        'product.product', 'search_read',
+        [[['default_code', '=', ref]]],
+        { fields: ['id', 'product_tmpl_id'], limit: 1 },
+      );
+      if (variantes.length === 0) continue;
+
+      const varianteId = variantes[0].id;
+      const tmplId = variantes[0].product_tmpl_id[0];
+
+      await this.ejecutar('product.product', 'write', [[varianteId], { lst_price: s.price }]);
+      await this.ejecutar('product.template', 'write', [[tmplId], {
+        name: payload.name,
+        description_sale: payload.shortDesc ?? payload.description ?? false,
+      }]);
+    }
+
+    this.logger.log(`Odoo: producto NK-${payload.productId} actualizado`);
+  }
+
+  private async resolverAtributoId(nombre: string): Promise<number> {
+    const existentes = await this.ejecutar<number[]>('product.attribute', 'search', [
+      [['name', '=', nombre]],
+    ], { limit: 1 });
+    if (existentes.length > 0) return existentes[0];
+
+    return this.ejecutar<number>('product.attribute', 'create', [{ name: nombre }]);
+  }
+
+  private async resolverValorAtributoId(atributoId: number, valor: string): Promise<number> {
+    const existentes = await this.ejecutar<number[]>('product.attribute.value', 'search', [
+      [['attribute_id', '=', atributoId], ['name', '=', valor]],
+    ], { limit: 1 });
+    if (existentes.length > 0) return existentes[0];
+
+    return this.ejecutar<number>('product.attribute.value', 'create', [{
+      attribute_id: atributoId,
+      name: valor,
+    }]);
+  }
+
+  private async obtenerImagenBase64(imageId?: string | null): Promise<string | null> {
+    if (!imageId) return null;
+    try {
+      const asset = await this.prisma.mediaAsset.findUnique({ where: { id: imageId } });
+      if (!asset) return null;
+      return Buffer.from(asset.data).toString('base64');
+    } catch {
+      return null;
+    }
   }
 }
