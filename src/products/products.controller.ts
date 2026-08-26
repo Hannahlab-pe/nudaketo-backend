@@ -64,6 +64,13 @@ export class ProductsController {
     return this.productsService.deactivate(id);
   }
 
+  @Delete(':id/permanent')
+  @UseGuards(JwtAuthGuard)
+  permanentDelete(@Request() req: any, @Param('id', ParseIntPipe) id: number) {
+    assertAdmin(req);
+    return this.productsService.permanentDelete(id);
+  }
+
   // ── Público (al final: captura cualquier cadena) ───────────────────────
   @Get(':slug')
   async findOne(@Param('slug') slug: string) {

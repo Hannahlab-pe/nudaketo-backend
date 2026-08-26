@@ -189,6 +189,13 @@ export class ProductsService {
     return toPublic(updated);
   }
 
+  async permanentDelete(id: number) {
+    const p = await this.prisma.product.findUnique({ where: { id } });
+    if (!p) throw new NotFoundException('Producto no encontrado');
+    await this.prisma.product.delete({ where: { id } });
+    return { ok: true };
+  }
+
   private assertUniqueSizeKeys(sizes: { sizeKey: string }[]) {
     const keys = sizes.map((s) => s.sizeKey);
     if (new Set(keys).size !== keys.length) {
