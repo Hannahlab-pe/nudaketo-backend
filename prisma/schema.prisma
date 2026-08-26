@@ -63,6 +63,8 @@ model Product {
   packaging   String
   // Cadena de frío: no se puede enviar a provincia
   refrigerated Boolean      @default(false)
+  // ID del producto en Odoo (null si se creó solo desde la web)
+  odooId      Int?      @unique
   // null = sin control de stock; 0 = agotado
   stock       Int?
   sortOrder   Int           @default(0)
