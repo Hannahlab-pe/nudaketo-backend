@@ -244,6 +244,15 @@ export class OdooService implements OnModuleInit {
         name: payload.name,
         description_sale: payload.shortDesc ?? payload.description ?? false,
       }]);
+
+      if (payload.stock !== null && payload.stock !== undefined) {
+        await this.ejecutar('stock.quant', 'create', [{
+          product_id: varianteId,
+          location_id: 8,
+          inventory_quantity: payload.stock,
+        }]);
+        await this.ejecutar('stock.quant', 'action_apply_inventory', [[]]);
+      }
     }
 
     this.logger.log(`Odoo: producto NK-${payload.productId} actualizado`);

@@ -167,6 +167,7 @@ export class ProductsService {
       shortDesc: updated.shortDesc,
       description: updated.description,
       imageId: updated.image?.split('/media/')[1] ?? null,
+      stock: updated.stock ?? null,
       sizes: updated.sizes.map((s) => ({ sizeKey: s.sizeKey, label: s.label, price: s.price })),
     }).catch((err) => this.logger.error(`Odoo update producto ${updated.id}: ${err.message}`));
 

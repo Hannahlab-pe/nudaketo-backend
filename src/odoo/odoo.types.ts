@@ -19,6 +19,7 @@ export interface OdooProductPayload {
   shortDesc?: string | null;
   sizes: OdooProductSize[];
   imageId?: string | null;
+  stock?: number | null;
 }
 
 export interface OdooOrderPayload {
