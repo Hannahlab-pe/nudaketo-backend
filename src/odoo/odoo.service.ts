@@ -248,7 +248,7 @@ export class OdooService implements OnModuleInit {
       if (payload.stock !== null && payload.stock !== undefined) {
         await this.ejecutar('stock.quant', 'create', [{
           product_id: varianteId,
-          location_id: 8,
+          location_id: 5,
           inventory_quantity: payload.stock,
         }]);
         await this.ejecutar('stock.quant', 'action_apply_inventory', [[]]);
