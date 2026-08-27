@@ -40,6 +40,7 @@ function toPublic(p: any) {
     netWeight: p.netWeight,
     packaging: p.packaging,
     refrigerated: p.refrigerated,
+    odooId: p.odooId ?? null,
     stock: p.stock,
     active: p.active,
     sizes: (p.sizes ?? [])
