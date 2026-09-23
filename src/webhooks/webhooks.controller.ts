@@ -40,24 +40,27 @@ export class WebhooksController {
       return { ok: false, reason: 'Payload inválido' };
     }
 
-    // Buscar si ya existe por odooId
-    const existing = await this.prisma.product.findFirst({
+    const stock = body.qty_available != null ? Math.max(0, Math.floor(body.qty_available)) : null;
+
+    // Buscar por odooId primero, luego por nombre como fallback
+    let existing = await this.prisma.product.findFirst({
       where: { odooId: body.id },
       include: { sizes: true },
     });
 
-    const stock = body.qty_available != null ? Math.max(0, Math.floor(body.qty_available)) : null;
+    if (!existing) {
+      existing = await this.prisma.product.findFirst({
+        where: { name: { equals: body.name, mode: 'insensitive' }, category: { not: 'general' } },
+        include: { sizes: true },
+      });
+    }
 
     if (existing) {
-      // Actualizar stock y nombre
       await this.prisma.product.update({
         where: { id: existing.id },
-        data: {
-          name: body.name,
-          stock,
-        },
+        data: { odooId: body.id, stock },
       });
-      this.logger.log(`Producto Odoo #${body.id} actualizado en BD local`);
+      this.logger.log(`Producto Odoo #${body.id} actualizado en BD local (id=${existing.id})`);
       return { ok: true, action: 'updated', productId: existing.id };
     }
 
