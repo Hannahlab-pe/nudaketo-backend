@@ -53,6 +53,7 @@ export class WebhooksController {
       });
 
       // Actualizar stock por variante
+      this.logger.log(`Variantes recibidas para #${body.id}: ${JSON.stringify((body.variants ?? []).map(v => ({ code: v.default_code, qty: v.qty_available })))}`);
       for (const variant of body.variants ?? []) {
         const sizeKey = variant.default_code?.split('-').pop();
         if (!sizeKey) continue;
