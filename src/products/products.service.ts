@@ -52,6 +52,7 @@ function toPublic(p: any) {
         size: s.size,
         pieces: s.pieces,
         price: s.price,
+        stock: s.stock ?? null,
       })),
   };
 }

@@ -83,6 +83,7 @@ model ProductSize {
   size      String
   pieces    String
   price     Float
+  stock     Int?
   sortOrder Int     @default(0)
 
   @@unique([productId, sizeKey])

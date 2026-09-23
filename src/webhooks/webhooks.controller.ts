@@ -51,6 +51,18 @@ export class WebhooksController {
         where: { id: existing.id },
         data: { stock },
       });
+
+      // Actualizar stock por variante
+      for (const variant of body.variants ?? []) {
+        const sizeKey = variant.default_code?.split('-').pop();
+        if (!sizeKey) continue;
+        const variantStock = variant.qty_available != null ? Math.max(0, Math.floor(variant.qty_available)) : null;
+        await this.prisma.productSize.updateMany({
+          where: { productId: existing.id, sizeKey },
+          data: { stock: variantStock },
+        });
+      }
+
       this.logger.log(`Producto Odoo #${body.id} actualizado (id=${existing.id}, stock=${stock})`);
       return { ok: true, productId: existing.id };
     }
