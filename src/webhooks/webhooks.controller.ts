@@ -55,7 +55,8 @@ export class WebhooksController {
       // Actualizar stock por variante
       this.logger.log(`Variantes recibidas para #${body.id}: ${JSON.stringify((body.variants ?? []).map(v => ({ code: v.default_code, qty: v.qty_available })))}`);
       for (const variant of body.variants ?? []) {
-        const sizeKey = variant.default_code?.split('-').pop();
+        const parts = variant.default_code?.split('-');
+        const sizeKey = parts && parts.length >= 3 ? parts.slice(2).join('-') : parts?.pop();
         if (!sizeKey) continue;
         const variantStock = variant.qty_available != null ? Math.max(0, Math.floor(variant.qty_available)) : null;
         await this.prisma.productSize.updateMany({
