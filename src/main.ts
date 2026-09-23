@@ -3,7 +3,10 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const bodyParser = require('body-parser');
+  app.use('/webhooks', bodyParser.json({ limit: '5mb' }));
+  app.use(bodyParser.json({ limit: '1mb' }));
 
   const allowedOrigins = [
     'https://www.nuda-keto.com',
