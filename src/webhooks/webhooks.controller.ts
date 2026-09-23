@@ -42,30 +42,21 @@ export class WebhooksController {
 
     const stock = body.qty_available != null ? Math.max(0, Math.floor(body.qty_available)) : null;
 
-    // Buscar por odooId primero, luego por nombre como fallback
-    let existing = await this.prisma.product.findFirst({
+    const existing = await this.prisma.product.findFirst({
       where: { odooId: body.id },
-      include: { sizes: true },
     });
-
-    if (!existing) {
-      existing = await this.prisma.product.findFirst({
-        where: { name: { equals: body.name, mode: 'insensitive' }, category: { not: 'general' } },
-        include: { sizes: true },
-      });
-    }
 
     if (existing) {
       await this.prisma.product.update({
         where: { id: existing.id },
-        data: { odooId: body.id, stock },
+        data: { stock },
       });
-      this.logger.log(`Producto Odoo #${body.id} actualizado en BD local (id=${existing.id})`);
-      return { ok: true, action: 'updated', productId: existing.id };
+      this.logger.log(`Producto Odoo #${body.id} actualizado (id=${existing.id}, stock=${stock})`);
+      return { ok: true, productId: existing.id };
     }
 
-    this.logger.warn(`Producto Odoo #${body.id} "${body.name}" no encontrado en BD local, se omite`);
-    return { ok: false, reason: 'Producto no encontrado en BD local' };
+    this.logger.warn(`Producto Odoo #${body.id} "${body.name}" sin odooId en BD, se omite`);
+    return { ok: false, reason: 'Sin odooId' };
   }
 
   private toSlug(name: string): string {
