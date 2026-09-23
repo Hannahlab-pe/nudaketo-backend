@@ -64,43 +64,8 @@ export class WebhooksController {
       return { ok: true, action: 'updated', productId: existing.id };
     }
 
-    // Crear producto nuevo (sin publicar, el equipo lo completa en el panel)
-    const slug = this.toSlug(body.name);
-    const safeSlug = await this.uniqueSlug(slug);
-
-    const created = await this.prisma.product.create({
-      data: {
-        odooId: body.id,
-        name: body.name,
-        slug: safeSlug,
-        category: 'general',
-        tagline: '',
-        image: '',
-        imageDetail: '',
-        shortDesc: '',
-        description: '',
-        highlights: [],
-        packaging: '',
-        accentClass: 'text-nk-gold',
-        btnClass: 'bg-nk-choco text-nk-ivory',
-        cardBg: 'bg-nk-ivory',
-        stock,
-        active: false, // no visible en tienda hasta que el equipo complete los datos
-        sizes: {
-          create: (body.variants ?? []).map((v, i) => ({
-            sizeKey: v.default_code?.split('-').pop() ?? `v${i}`,
-            label: v.combination_name ?? `Variante ${i + 1}`,
-            size: v.combination_name ?? '',
-            pieces: '',
-            price: v.lst_price ?? body.list_price ?? 0,
-            sortOrder: i,
-          })),
-        },
-      },
-    });
-
-    this.logger.log(`Producto Odoo #${body.id} creado en BD local como id ${created.id}`);
-    return { ok: true, action: 'created', productId: created.id };
+    this.logger.warn(`Producto Odoo #${body.id} "${body.name}" no encontrado en BD local, se omite`);
+    return { ok: false, reason: 'Producto no encontrado en BD local' };
   }
 
   private toSlug(name: string): string {
