@@ -125,6 +125,12 @@ model Order {
   sellerCode     String?
   discountCents  Int    @default(0)
   commissionCents Int   @default(0)
+  // Comprobante electrónico (boleta o factura)
+  receiptType    String  @default("BOLETA")
+  docType        String?
+  docNumber      String?
+  billingName    String?
+  billingAddress String?
   items        OrderItem[]
   createdAt    DateTime    @default(now())
 }
