@@ -28,6 +28,17 @@ export class OrderItemDto {
   price: number;
 }
 
+// Comprobante electrónico: boleta (DNI o carné opcional, obligatorio desde S/ 700)
+// o factura (RUC, razón social y dirección fiscal).
+export class ReceiptDto {
+  @IsIn(['BOLETA', 'FACTURA'])
+  type: 'BOLETA' | 'FACTURA';
+
+  @IsOptional() @IsString() docNumber?: string;
+  @IsOptional() @IsString() billingName?: string;
+  @IsOptional() @IsString() billingAddress?: string;
+}
+
 export class CreateOrderDto {
   @IsString()
   culqiToken: string;
@@ -60,6 +71,12 @@ export class CreateOrderDto {
   @IsOptional() @IsString() city?: string;
   @IsOptional() @IsString() reference?: string;
   @IsOptional() @IsString() mapsLink?: string;
+
+  // Comprobante (si no viene, boleta sin documento)
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ReceiptDto)
+  receipt?: ReceiptDto;
 
   // El total (productos + envío) lo calcula el servidor, no se confía en el cliente.
 }

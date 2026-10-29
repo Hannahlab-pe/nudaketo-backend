@@ -6,6 +6,7 @@ import { SellersService } from '../sellers/sellers.service';
 import { OdooService } from '../odoo/odoo.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getShippingCents } from './catalog';
+import { normalizeReceipt } from './receipt';
 import { ProductsService } from '../products/products.service';
 
 @Injectable()
@@ -88,6 +89,7 @@ export class OrdersService {
     // Código de vendedor: descuento (sobre productos) + comisión (snapshot)
     let sellerId: string | null = null;
     let sellerCode: string | null = null;
+    let discountPct = 0;
     let discountCents = 0;
     let commissionCents = 0;
     if (dto.sellerCode) {
@@ -95,13 +97,17 @@ export class OrdersService {
       if (seller && seller.role === 'VENDEDOR') {
         sellerId = seller.id;
         sellerCode = seller.sellerCode;
-        discountCents = Math.round((itemsCents * (seller.discountPct || 0)) / 100);
+        discountPct = seller.discountPct || 0;
+        discountCents = Math.round((itemsCents * discountPct) / 100);
         const netItems = itemsCents - discountCents;
         commissionCents = Math.round((netItems * (seller.commissionPct || 0)) / 100);
       }
     }
 
     const totalCents = itemsCents - discountCents + shippingCents;
+
+    // Datos del comprobante: se validan antes de cobrar para no cobrar un pedido sin comprobante válido
+    const receipt = normalizeReceipt(dto.receipt, totalCents, dto.customerName || user?.name || null);
 
     const charge = await this.culqi.createCharge({
       amount: totalCents,
@@ -130,6 +136,11 @@ export class OrdersService {
         sellerCode,
         discountCents,
         commissionCents,
+        receiptType: receipt.type,
+        docType: receipt.docType,
+        docNumber: receipt.docNumber,
+        billingName: receipt.billingName,
+        billingAddress: receipt.billingAddress,
         items: { create: validatedItems },
       },
       include: { items: true },
@@ -169,6 +180,9 @@ export class OrdersService {
         price: i.price,
       })),
       totalCents: order.totalCents,
+      shippingCents: order.shippingCents,
+      discountPct,
+      receipt,
       culqiChargeId: order.culqiCharge,
     }).catch((err) => this.logger.error(`Odoo sync falló para orden ${order.id}: ${err.message}`));
 

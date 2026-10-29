@@ -1,3 +1,5 @@
+import { NormalizedReceipt } from '../orders/receipt';
+
 export interface OdooLineItem {
   productId: number;
   sizeId: string;
@@ -31,5 +33,9 @@ export interface OdooOrderPayload {
   city?: string | null;
   items: OdooLineItem[];
   totalCents: number;
+  // Lo que se cobró además de los productos: Odoo lo necesita para que el comprobante cuadre con Culqi
+  shippingCents?: number;
+  discountPct?: number;
+  receipt?: NormalizedReceipt;
   culqiChargeId?: string | null;
 }

@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { OdooLineItem, OdooOrderPayload, OdooProductPayload } from './odoo.types';
+import { NormalizedReceipt, ReceiptDocType } from '../orders/receipt';
 
 @Injectable()
 export class OdooService implements OnModuleInit {
@@ -103,6 +104,60 @@ export class OdooService implements OnModuleInit {
     }]);
   }
 
+  /** Código SUNAT del tipo de documento en Odoo: DNI = 1, carné de extranjería = 4, RUC = 6. */
+  private async tipoIdentificacionId(docType: ReceiptDocType): Promise<number | false> {
+    const codigo = { DNI: '1', CE: '4', RUC: '6' }[docType];
+    const ids = await this.ejecutar<number[]>('l10n_latam.identification.type', 'search', [
+      [['l10n_pe_vat_code', '=', codigo]],
+    ], { limit: 1 });
+    return ids[0] ?? false;
+  }
+
+  /** Cliente del comprobante: se busca por su documento (DNI, carné o RUC) y no por correo. */
+  private async resolverPartnerPorDocumento(
+    receipt: NormalizedReceipt,
+    email: string,
+    phone?: string | null,
+    address?: string | null,
+  ): Promise<number> {
+    const esEmpresa = receipt.docType === 'RUC';
+    const valores: Record<string, unknown> = {
+      name: receipt.billingName ?? email,
+      vat: receipt.docNumber,
+      l10n_latam_identification_type_id: await this.tipoIdentificacionId(receipt.docType as ReceiptDocType),
+      is_company: esEmpresa,
+      street: (esEmpresa ? receipt.billingAddress : address) ?? false,
+      customer_rank: 1,
+    };
+
+    const existentes = await this.ejecutar<{ id: number; email: string | false }[]>('res.partner', 'search_read', [
+      [['vat', '=', receipt.docNumber]],
+    ], { fields: ['id', 'email'], limit: 1 });
+
+    if (existentes.length > 0) {
+      await this.ejecutar('res.partner', 'write', [[existentes[0].id], {
+        ...valores,
+        ...(existentes[0].email ? {} : { email }),
+        ...(phone ? { phone } : {}),
+      }]);
+      return existentes[0].id;
+    }
+
+    return this.ejecutar<number>('res.partner', 'create', [{
+      ...valores,
+      email,
+      phone: phone ?? false,
+    }]);
+  }
+
+  /** Producto de la línea de envío (lo crea el módulo de Odoo con código NK-ENVIO). */
+  private async productoEnvioId(): Promise<number | null> {
+    const ids = await this.ejecutar<number[]>('product.product', 'search', [
+      [['default_code', '=', 'NK-ENVIO']],
+    ], { limit: 1 });
+    return ids[0] ?? null;
+  }
+
   private async resolverProductoId(item: OdooLineItem): Promise<number | null> {
     const ref = `NK-${item.productId}-${item.sizeId}`;
 
@@ -134,13 +189,15 @@ export class OdooService implements OnModuleInit {
   async crearOrdenVenta(payload: OdooOrderPayload): Promise<number> {
     if (!this.enabled) return 0;
 
-    const partnerId = await this.resolverPartnerId(
-      payload.customerEmail,
-      payload.customerName ?? payload.customerEmail,
-      payload.phone,
-      payload.address,
-      payload.city,
-    );
+    const partnerId = payload.receipt?.docNumber
+      ? await this.resolverPartnerPorDocumento(payload.receipt, payload.customerEmail, payload.phone, payload.address)
+      : await this.resolverPartnerId(
+          payload.customerEmail,
+          payload.customerName ?? payload.customerEmail,
+          payload.phone,
+          payload.address,
+          payload.city,
+        );
 
     const saleOrderId = await this.ejecutar<number>('sale.order', 'create', [{
       partner_id: partnerId,
@@ -162,9 +219,27 @@ export class OdooService implements OnModuleInit {
           product_uom_qty: item.qty,
           price_unit: item.price,
           name: item.name,
+          // Descuento del código de vendedor, el mismo % que se descontó en Culqi
+          discount: payload.discountPct ?? 0,
         }]);
       } catch (err) {
         this.logger.error(`Error creando línea "${item.name}" en Odoo: ${err.message}`);
+      }
+    }
+
+    // El envío cobrado va como una línea más para que el comprobante cuadre con el cobro
+    if (payload.shippingCents && payload.shippingCents > 0) {
+      const envioId = await this.productoEnvioId();
+      if (envioId) {
+        await this.ejecutar('sale.order.line', 'create', [{
+          order_id: saleOrderId,
+          product_id: envioId,
+          product_uom_qty: 1,
+          price_unit: payload.shippingCents / 100,
+          name: 'Envío a domicilio',
+        }]);
+      } else {
+        this.logger.warn(`Pedido NK-${payload.nudaketoOrderId}: no existe el producto NK-ENVIO en Odoo, el envío no va en el comprobante.`);
       }
     }
 
